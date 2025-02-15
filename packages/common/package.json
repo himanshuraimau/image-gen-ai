@@ -1,7 +1,11 @@
 {
-  "name": "common",
+  "name": "@repo/common",
   "module": "index.ts",
   "type": "module",
+  "exports":{
+    "./types":"./types.ts",
+    "./inferred-types":"./inferred-types.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
