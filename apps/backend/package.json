@@ -2,6 +2,10 @@
   "name": "backend",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "start": "bun run index.ts",
+    "dev": "bun dev index.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -11,6 +15,7 @@
   "dependencies": {
     "@types/express": "^5.0.0",
     "express": "^4.21.2",
-    "@repo/common":"*"
+    "@repo/common": "*",
+    "db": "*"
   }
 }

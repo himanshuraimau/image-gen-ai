@@ -13,16 +13,88 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model User {
-  id       String @id @default(uuid())
-  username String
+  id             String   @id @default(uuid())
+  username       String
   profilePicture String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
-model Model{
-  id String @id @default(uuid())
-  name String
-  type String
+model Model {
+  id             String           @id @default(uuid())
+  name           String
+  type           ModelTypeEnum
+  age            Int
+  ethinicity     EthenecityEnum
+  eyeColor       EyeColorEnum
+  bald           Boolean
+  userId         String
+  TrainingImages TrainingImages[]
+  OutputImages   OutputImages[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model TrainingImages {
+  id       String @id @default(uuid())
+  imageUrl String
+  modelId  String
+  model    Model  @relation(fields: [modelId], references: [id])
+}
+
+enum OutputImageStatusEnum {
+  Pending
+  Generated
+  Failed
+}
+
+model OutputImages {
+  id        String                @id @default(uuid())
+  imageUrl  String                @default("")
+  modelId   String
+  userId    String
+  prompt    String
+  status    OutputImageStatusEnum @default(Pending)
+  model     Model                 @relation(fields: [modelId], references: [id])
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+}
+
+model Packs {
+  id      String        @id @default(uuid())
+  name    String
+  prompts PackPrompts[]
+}
+
+model PackPrompts {
+  id     String @id @default(uuid())
+  prompt String
+  packId String
+  pack   Packs  @relation(fields: [packId], references: [id])
+}
+
+enum EthenecityEnum {
+  White
+  Black
+  Asian_American   @map("Asian American")
+  East_Asian       @map("East Asian")
+  South_East_Asian @map("South East Asian")
+  South_Asian      @map("South Asian")
+  Middle_Eastern   @map("Middle Eastern")
+  Pacific
+  Hispanic
+}
+
+enum EyeColorEnum {
+  Brown
+  Blue
+  Hazel
+  Gray
+}
+
+enum ModelTypeEnum {
+  Man
+  Woman
+  Others
 }
