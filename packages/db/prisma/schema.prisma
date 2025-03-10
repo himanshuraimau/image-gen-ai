@@ -21,8 +21,14 @@ model User {
   updatedAt      DateTime @updatedAt
 }
 
+enum ModelTrainingStatusEnum {
+  Pending
+  Generated
+  Failed
+}
+
 model Model {
-  id             String           @id @default(uuid())
+  id             String                  @id @default(uuid())
   name           String
   type           ModelTypeEnum
   age            Int
@@ -30,10 +36,16 @@ model Model {
   eyeColor       EyeColorEnum
   bald           Boolean
   userId         String
-  TrainingImages TrainingImages[]
-  OutputImages   OutputImages[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  triggerWords   String?
+  tensorPath     String?
+  trainingStatus ModelTrainingStatusEnum @default(Pending)
+  trainingImages TrainingImages[]
+  outputImages   OutputImages[]
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  falAiRequestId String?
+
+  @@index([falAiRequestId])
 }
 
 model TrainingImages {
@@ -50,15 +62,18 @@ enum OutputImageStatusEnum {
 }
 
 model OutputImages {
-  id        String                @id @default(uuid())
-  imageUrl  String                @default("")
-  modelId   String
-  userId    String
-  prompt    String
-  status    OutputImageStatusEnum @default(Pending)
-  model     Model                 @relation(fields: [modelId], references: [id])
-  createdAt DateTime              @default(now())
-  updatedAt DateTime              @updatedAt
+  id             String                @id @default(uuid())
+  imageUrl       String                @default("")
+  modelId        String
+  userId         String
+  prompt         String
+  falAiRequestId String?
+  status         OutputImageStatusEnum @default(Pending)
+  model          Model                 @relation(fields: [modelId], references: [id])
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  @@index([falAiRequestId])
 }
 
 model Packs {

@@ -122,12 +122,46 @@ app.get("/image/bulk", async (req: Request, res: Response): Promise<any> => {
 });
 
 
-app.post("/fal-ai/webhook", async (req: Request, res: Response): Promise<any> => {
+app.post("/fal-ai/webhook/train", async (req: Request, res: Response): Promise<any> => {
     console.log(req.body);
-  
+
+    const repquestId = req.body.requestId;
+
+    await prismaClient.model.updateMany({
+        where: {
+            falAiRequestId: repquestId
+        },
+        data: {
+            trainingStatus: "Generated",
+            tensorPath: req.body.tensor_path
+
+        }
+    })
     //update the status of the image in the database
     res.json({
         success: true
+    });
+});
+
+app.post("/fal-ai/webhook/image", async (req: Request, res: Response): Promise<any> => {
+    console.log(req.body);
+
+    const repquestId = req.body.requestId;
+    const imageId = req.body.imageId;
+
+    await prismaClient.outputImages.updateMany({
+        where: {
+            falAiRequestId: repquestId
+        },
+        data: {
+            status: "Generated",
+            imageUrl: req.body.imageUrl
+        }
+    })
+    //update the status of the image in the database
+    res.json({
+        success: true,
+        message: "Image updated"
     });
 });
 
