@@ -121,6 +121,17 @@ app.get("/image/bulk", async (req: Request, res: Response): Promise<any> => {
     })
 });
 
+
+app.post("/fal-ai/webhook", async (req: Request, res: Response): Promise<any> => {
+    console.log(req.body);
+  
+    //update the status of the image in the database
+    res.json({
+        success: true
+    });
+});
+
+
 const PORT = process.env.PORT || 3000;
 
 
