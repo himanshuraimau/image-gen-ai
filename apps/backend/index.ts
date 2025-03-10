@@ -1,11 +1,16 @@
 import express, { type Request, type Response } from 'express';
 import { TrainModel, GenerateImage, GenerateImagesFromPack } from '@repo/common/types';
 import { prismaClient } from 'db';
+import { s3, write, S3Client } from 'bun';
+import { FalAIModel } from './model/FalAIModel';
+
 
 const app = express();
 app.use(express.json());
 
 const USER_ID = "1";
+
+const falAiModel = new FalAIModel();
 
 app.post("/ai/training", async (req: Request, res: Response): Promise<any> => {
     const parsedBody = TrainModel.safeParse(req.body);
